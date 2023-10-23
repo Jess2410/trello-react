@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Column from "./Column";
 import TextField from "@mui/material/TextField";
 import { Add } from "@mui/icons-material";
@@ -8,32 +8,35 @@ import { useDispatch } from "react-redux";
 import { ColumnType } from "../type";
 import { addColumn } from "../redux/columnSlice";
 import { v4 as uuidv4 } from "uuid";
+import { RootState } from "../redux/store";
 
 const Board = () => {
   const initColumn: ColumnType = {
-    id: "",
+    columnId: "",
     title: "",
     tasks: [],
   };
-  const { columns } = useSelector((state) => state.columns);
-  console.log("🚀 ~ file: Board.tsx:19 ~ Board ~ columns:", columns);
+  const { columns } = useSelector((state: RootState) => state.columns);
+
   const dispatch = useDispatch();
   const [newColumn, setNewColumn] = useState(initColumn);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewColumn({ ...newColumn, [name]: value });
   };
-  const createColumn = (e: any) => {
+  const createColumn = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const key = uuidv4();
-    dispatch(addColumn({ ...newColumn, id: key }));
-    // onClose();
+    if (newColumn.title.trim() === "") {
+      alert("Veuillez saisir un titre de colonne !");
+    } else {
+      const key = uuidv4();
+      dispatch(addColumn({ ...newColumn, id: key }));
+    }
   };
-  console.log("🚀 ~ file: Board.tsx:9 ~ Board ~ columns:", columns);
 
   return (
-    <div style={{ padding: "16px" }}>
+    <div style={{ padding: "16px", maxWidth: 1280, margin: "auto" }}>
       <Box
         sx={{
           display: "flex",
@@ -52,14 +55,14 @@ const Board = () => {
           sx={{ m: 1 }}
         />
         <Button variant="contained" sx={{ m: 1 }} onClick={createColumn}>
-          <Add onClick={createColumn} />
+          <Add />
         </Button>
       </Box>
       <Grid container spacing={2}>
-        {columns.map((column) => (
+        {columns.map((column: ColumnType) => (
           <Column
-            key={column.id}
-            columnId={column.id}
+            key={column.columnId}
+            columnId={column.columnId}
             title={column.title}
             tasks={column.tasks}
           />

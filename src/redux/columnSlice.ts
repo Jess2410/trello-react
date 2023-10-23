@@ -8,7 +8,7 @@ interface ColumnsState {
 const initialState: ColumnsState = {
   columns: [
     {
-      id: 1,
+      columnId: 1,
       title: "Colonne1",
       tasks: [
         {
@@ -24,7 +24,7 @@ const initialState: ColumnsState = {
       ],
     },
     {
-      id: 2,
+      columnId: 2,
       title: "Colonne2",
       tasks: [
         {
@@ -72,6 +72,18 @@ export const columnsSlice = createSlice({
         column.tasks.push(task);
       }
     },
+    updateTaskToColumn: (state, action) => {
+      const { columnId, taskId, title, description } = action.payload;
+      const column = state.columns.find((col) => col.columnId === columnId);
+      if (column) {
+        const taskUpdated = column.tasks.find((task) => task.id === taskId);
+
+        if (taskUpdated) {
+          taskUpdated.title = title;
+          taskUpdated.description = description;
+        }
+      }
+    },
     // updateTaskById: (state, action) => {
     //   const { id, title, description } = action.payload;
     //   const taskUpdated = state.tasks.find((task) => task.id === id);
@@ -100,6 +112,7 @@ export const columnsSlice = createSlice({
 export const {
   addColumn,
   addTaskToColumn,
+  updateTaskToColumn,
   deleteColumnById,
   deleteTaskToColumn,
 } = columnsSlice.actions;

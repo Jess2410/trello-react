@@ -9,19 +9,18 @@ import { deleteTaskToColumn } from "../redux/columnSlice";
 type CardProps = {
   title: string;
   description: string;
-  id?: number;
+  taskId?: number | string;
   columnId: number | string;
 };
 
 const CardItem: React.FC<CardProps> = ({
   title,
   description,
-  id: taskId,
+  taskId,
   columnId,
 }) => {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
-  //   const { tasks } = useSelector((state) => state.tasks);
 
   const handleClose = () => {
     setEdit(false);
@@ -30,6 +29,10 @@ const CardItem: React.FC<CardProps> = ({
   const deleteTask = (taskId: number | string, columnId: number | string) => {
     dispatch(deleteTaskById(taskId));
     dispatch(deleteTaskToColumn({ columnId, taskId }));
+  };
+
+  const updateTask = () => {
+    setEdit(!edit);
   };
 
   return (
@@ -55,16 +58,17 @@ const CardItem: React.FC<CardProps> = ({
             </Typography>
           </Box>
           <Box>
-            <IconButton aria-label="edit" onClick={() => setEdit(!edit)}>
+            <IconButton onClick={() => updateTask()}>
               <Edit sx={{ color: "#1976D2" }} />
             </IconButton>
-            <IconButton
-              aria-label="delete"
-              onClick={() => deleteTask(taskId, columnId)}
-              sx={{ pr: 0 }}
-            >
-              <Delete sx={{ color: "#9146D2" }} />
-            </IconButton>
+            {taskId && (
+              <IconButton
+                onClick={() => deleteTask(taskId, columnId)}
+                sx={{ pr: 0 }}
+              >
+                <Delete sx={{ color: "#9146D2" }} />
+              </IconButton>
+            )}
           </Box>
         </CardContent>
       </Card>
@@ -73,9 +77,10 @@ const CardItem: React.FC<CardProps> = ({
           open={edit}
           onClose={handleClose}
           title={title}
-          id={id}
+          id={taskId}
           edit={edit}
           description={description}
+          columnId={columnId}
         />
       )}
     </>

@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 
 export default function AppBarComponent() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box>
       <AppBar position="static">
         <Toolbar>
           <Typography

@@ -9,7 +9,7 @@ import { addTask, updateTaskById } from "../redux/taskSlice";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { TaskType } from "../type";
-import { addTaskToColumn } from "../redux/columnSlice";
+import { addTaskToColumn, updateTaskToColumn } from "../redux/columnSlice";
 
 type DialogComponentProps = {
   open: boolean;
@@ -24,25 +24,25 @@ type DialogComponentProps = {
 const DialogComponent: React.FC<DialogComponentProps> = ({
   open,
   onClose,
-  title,
-  description,
+  title: initialTitle,
+  description: initialDescription,
   edit,
   id,
   columnId,
 }) => {
   const initCard: TaskType = {
     id: "",
-    title: "",
-    description: "",
+    title: initialTitle || "",
+    description: initialDescription || "",
   };
   const dispatch = useDispatch();
   const [newCard, setNewCard] = useState(initCard);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewCard({ ...newCard, [name]: value });
   };
-  const createTask = (e) => {
+  const createTask = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const key = uuidv4();
     const newTask = { ...newCard, id: key };
@@ -54,15 +54,19 @@ const DialogComponent: React.FC<DialogComponentProps> = ({
     onClose();
   };
 
-  const editTask = (e) => {
-    e.preventDefault;
-    dispatch(
-      updateTaskById({
-        id: id,
-        title: newCard.title,
-        description: newCard.description,
-      })
-    );
+  const editTask = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const updatedTask = {
+      columnId: columnId,
+      taskId: id,
+      title: newCard.title,
+      description: newCard.description,
+    };
+
+    dispatch(updateTaskToColumn(updatedTask));
+    dispatch(updateTaskById(updatedTask));
+
     onClose();
   };
 
@@ -80,7 +84,7 @@ const DialogComponent: React.FC<DialogComponentProps> = ({
             type="text"
             fullWidth
             variant="standard"
-            defaultValue={title || newCard.title}
+            defaultValue={initialTitle || newCard.title}
             onChange={handleChange}
           />
 
@@ -93,7 +97,7 @@ const DialogComponent: React.FC<DialogComponentProps> = ({
             type="text"
             fullWidth
             variant="standard"
-            defaultValue={description || newCard.description}
+            defaultValue={initialDescription || newCard.description}
             onChange={handleChange}
           />
         </DialogContent>

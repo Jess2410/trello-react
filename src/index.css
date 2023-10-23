@@ -20,6 +20,7 @@ html,
 body {
   padding: 0;
   margin: 0;
+  overflow-x: hidden;
 }
 
 a {
@@ -37,6 +38,7 @@ a:hover {
   min-width: 320px;
   min-height: 100vh;
   background: #535bf2;
+  width: 100vw;
 }
 
 h1 {
