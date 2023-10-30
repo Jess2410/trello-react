@@ -18,7 +18,7 @@ type DialogComponentProps = {
   title?: string;
   description?: string;
   id?: number | string;
-  columnId?: number | string;
+  columnId: number | string;
 };
 
 const DialogComponent: React.FC<DialogComponentProps> = ({

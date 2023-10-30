@@ -2,6 +2,9 @@ export type ColumnType = {
   columnId: number | string;
   title: string;
   tasks: TaskType[];
+  onDragStart?: () => void;
+  onDragEnter?: () => void;
+  onDragEndColumn?: () => void;
 };
 
 export type TaskType = {

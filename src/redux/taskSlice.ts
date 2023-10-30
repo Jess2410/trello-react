@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { TaskType } from "../type";
+import { v4 as uuidv4 } from "uuid";
 
 interface TasksState {
   tasks: TaskType[];
@@ -8,7 +9,7 @@ interface TasksState {
 const initialState: TasksState = {
   tasks: [
     {
-      id: 1,
+      id: uuidv4(),
       title: "Salut",
       description: "c'est moi la card",
     },

@@ -16,11 +16,30 @@ import CardItem from "./ItemCard";
 import { ColumnType, TaskType } from "../type";
 import { deleteColumnById } from "../redux/columnSlice";
 import { useDispatch } from "react-redux";
+import useDragAndDrop from "../hooks/useDragAndDrop";
 
-const Column: React.FC<ColumnType> = ({ title, columnId, tasks }) => {
+const Column: React.FC<ColumnType> = ({
+  title,
+  columnId,
+  tasks: tasksProps,
+  onDragEndColumn,
+  onDragStart: onDragStartColumn,
+  onDragEnter: onDragEnterColumn,
+}) => {
   const dispatch = useDispatch();
 
   const [openDialog, setOpenDialog] = useState(false);
+
+  const {
+    positionStart,
+    positionEnter,
+    setPositionStart,
+    setPositionEnter,
+    onDragStart,
+    onDragEnter,
+  } = useDragAndDrop();
+
+  const [tasks, setTasks] = useState(tasksProps);
 
   const handleClickOpen = () => {
     setOpenDialog(true);
@@ -29,9 +48,36 @@ const Column: React.FC<ColumnType> = ({ title, columnId, tasks }) => {
   const handleClose = () => {
     setOpenDialog(false);
   };
+
+  const onDrop = () => {
+    const copyTasks = [...tasks];
+
+    const getItemByPositionStart = copyTasks[positionStart];
+    const getItemByPositionEnter = copyTasks[positionEnter];
+
+    if (!getItemByPositionStart || !getItemByPositionEnter) {
+      return;
+    }
+
+    copyTasks[positionEnter] = getItemByPositionStart;
+    copyTasks[positionStart] = getItemByPositionEnter;
+
+    setTasks(copyTasks);
+    setPositionStart(0);
+    setPositionEnter(0);
+  };
+
   return (
     <>
-      <Grid item xs={4} key={columnId}>
+      <Grid
+        item
+        xs={4}
+        key={columnId}
+        onDragStart={onDragStartColumn}
+        onDragEnter={onDragEnterColumn}
+        onDragEnd={onDragEndColumn}
+        draggable
+      >
         <Paper elevation={3} sx={{ padding: "18px" }}>
           <Box
             sx={{
@@ -50,9 +96,13 @@ const Column: React.FC<ColumnType> = ({ title, columnId, tasks }) => {
             </IconButton>
           </Box>
           <Divider sx={{ py: "10px" }} />
+
           <List sx={{ pt: "16px" }}>
-            {tasks.map((task: TaskType) => (
+            {tasks.map((task: TaskType, index: number) => (
               <CardItem
+                onDragStart={() => onDragStart(index)}
+                onDragEnter={() => onDragEnter(index)}
+                onDragEnd={onDrop}
                 taskId={task.id}
                 key={task.id}
                 title={task.title}

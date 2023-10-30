@@ -6,18 +6,31 @@ import { useState } from "react";
 import DialogComponent from "./Dialog";
 import { deleteTaskToColumn } from "../redux/columnSlice";
 
-type CardProps = {
+// type CardProps = {
+//   title: string;
+//   description: string;
+//   taskId?: number | string;
+//   columnId: number | string;
+// };
+
+interface CardItemProps {
   title: string;
   description: string;
   taskId?: number | string;
   columnId: number | string;
-};
+  onDragStart: () => void;
+  onDragEnter: () => void;
+  onDragEnd: () => void;
+}
 
-const CardItem: React.FC<CardProps> = ({
+const CardItem: React.FC<CardItemProps> = ({
+  taskId,
   title,
   description,
-  taskId,
   columnId,
+  onDragStart,
+  onDragEnter,
+  onDragEnd,
 }) => {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
@@ -37,7 +50,14 @@ const CardItem: React.FC<CardProps> = ({
 
   return (
     <>
-      <Card variant="outlined" sx={{ marginBottom: 2 }}>
+      <Card
+        variant="outlined"
+        sx={{ marginBottom: 2 }}
+        onDragStart={onDragStart}
+        onDragEnter={onDragEnter}
+        onDragEnd={onDragEnd}
+        draggable
+      >
         <CardContent
           sx={{
             marginBottom: 1,

@@ -55,16 +55,7 @@ export const columnsSlice = createSlice({
       state.columns.push(action.payload);
       return state;
     },
-    // addTaskByColumnId: (state, action) => {
-    //   const { id } = action.payload;
-    //   const taskToAddInColumnId = state.columns.find(
-    //     (column) => column.id === id
-    //   );
-    //   if (taskToAddInColumnId) {
-    //     taskToAddInColumnId.tasks.push(action.payload);
-    //     return state;
-    //   }
-    // },
+
     addTaskToColumn: (state, action) => {
       const { columnId, task } = action.payload;
       const column = state.columns.find((col) => col.columnId === columnId);
@@ -84,15 +75,7 @@ export const columnsSlice = createSlice({
         }
       }
     },
-    // updateTaskById: (state, action) => {
-    //   const { id, title, description } = action.payload;
-    //   const taskUpdated = state.tasks.find((task) => task.id === id);
 
-    //   if (taskUpdated) {
-    //     taskUpdated.title = title;
-    //     taskUpdated.description = description;
-    //   }
-    // },
     deleteColumnById: (state, action) => {
       state.columns = state.columns.filter(
         (column) => column.columnId !== action.payload
