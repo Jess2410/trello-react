@@ -11,4 +11,5 @@ export type TaskType = {
   id: number | string;
   title: string;
   description: string;
+  columnId: number | string;
 };

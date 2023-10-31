@@ -9,7 +9,6 @@ import { ColumnType } from "../type";
 import { addColumn } from "../redux/columnSlice";
 import { v4 as uuidv4 } from "uuid";
 import { RootState } from "../redux/store";
-import useDragAndDrop from "../hooks/useDragAndDrop";
 import { useRef } from "react";
 
 const Board = () => {
@@ -25,32 +24,6 @@ const Board = () => {
   const dispatch = useDispatch();
   const [newColumn, setNewColumn] = useState(initColumn);
   const [cards, setCards] = useState(columns);
-  const {
-    positionStart,
-    positionEnter,
-    setPositionStart,
-    setPositionEnter,
-    onDragStart,
-    onDragEnter,
-  } = useDragAndDrop();
-
-  const onDropCards = () => {
-    const copyCards = [...cards];
-
-    const getItemByPositionStart = copyCards[positionStart];
-    const getItemByPositionEnter = copyCards[positionEnter];
-
-    if (!getItemByPositionStart || !getItemByPositionEnter) {
-      return;
-    }
-
-    copyCards[positionEnter] = getItemByPositionStart;
-    copyCards[positionStart] = getItemByPositionEnter;
-
-    setCards(copyCards);
-    setPositionStart(0);
-    setPositionEnter(0);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -98,11 +71,8 @@ const Board = () => {
         </Button>
       </Box>
       <Grid container spacing={2}>
-        {cards.map((column: ColumnType, index: number) => (
+        {cards.map((column: ColumnType) => (
           <Column
-            onDragEndColumn={onDropCards}
-            onDragStart={() => onDragStart(index)}
-            onDragEnter={() => onDragEnter(index)}
             key={column.columnId}
             columnId={column.columnId}
             title={column.title}

@@ -18,9 +18,6 @@ interface CardItemProps {
   description: string;
   taskId?: number | string;
   columnId: number | string;
-  onDragStart: () => void;
-  onDragEnter: () => void;
-  onDragEnd: () => void;
 }
 
 const CardItem: React.FC<CardItemProps> = ({
@@ -28,9 +25,6 @@ const CardItem: React.FC<CardItemProps> = ({
   title,
   description,
   columnId,
-  onDragStart,
-  onDragEnter,
-  onDragEnd,
 }) => {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
@@ -50,14 +44,7 @@ const CardItem: React.FC<CardItemProps> = ({
 
   return (
     <>
-      <Card
-        variant="outlined"
-        sx={{ marginBottom: 2 }}
-        onDragStart={onDragStart}
-        onDragEnter={onDragEnter}
-        onDragEnd={onDragEnd}
-        draggable
-      >
+      <Card variant="outlined" sx={{ marginBottom: 2 }}>
         <CardContent
           sx={{
             marginBottom: 1,
